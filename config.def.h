@@ -6,6 +6,9 @@ const unsigned int interval = 1000;
 /* text to show if no value can be retrieved */
 static const char unknown_str[] = "n/a";
 
+/* Command to get volume percentage. */
+static const char volume_cmd[] = "V=$(amixer sget Master | grep \"Left:\"); if [ \"${V: -4:3}\" = \"off\" ]; then V=\"0\"; elif [ \"${V:23:3}\" = \"100\" ]; then V=\"100\"; else V=\"${V:23:2}\"; fi; echo $V";
+
 /* maximum output string length */
 #define MAXLEN 2048
 
@@ -62,6 +65,12 @@ static const char unknown_str[] = "n/a";
  * wifi_essid          WiFi ESSID                      interface name (wlan0)
  */
 static const struct arg args[] = {
-	/* function format          argument */
-	{ datetime, "%s",           "%F %T" },
+	/* function      format      argument   */
+	{  netspeed_tx,  "U: %s ",   "wlp1s0"   },
+	{  netspeed_rx,  "D: %s ",   "wlp1s0"   },
+	{  run_command,  "V: %s%% ", volume_cmd },
+	{  battery_perc, "B: %s%% ", "BAT0"     },
+	{  cpu_perc,     "C: %s%% ", NULL       },
+	{  ram_perc,     "R: %s%% ", NULL       },
+	{  datetime,     "%s",       "%F %r"    },
 };
